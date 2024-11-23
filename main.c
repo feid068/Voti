@@ -7,22 +7,22 @@
 float voti[MAX_SIZE];
 float pesi[MAX_SIZE];
 float media[MAX_SIZE];
-char nome[] = "materie/eletronica.txt";
+char nome[] = "materie.txt";
+char path[] = "materie/";
+char extention[] = ".txt";
 
 int main(){
     FILE *file;
-    char a[50];
 
-    input(a);
-    ins(&file, "materie.txt", a);
-
-    //prende_i_voti(&file, nome, voti, pesi);
-    //int size = sizeof(voti)/sizeof(voti[0]); 
-    //media_ponderata(voti, pesi, media, size);
-//for (int i = 0; i < sizeof(media)/sizeof(media[0]); i++){
-        //printf("La media è %.2f\n", media[i]);
-    //}
+    //printf("Inserisci il nome della materia che vuoi aggiungere\n");
+    //char nomeMat[50];
+    //input(nomeMat, 50);
+    //ins(&file, nome, nomeMat);
+    char a[15][1024];
+    crea_file_materie(&file, nome, path, extention, a);
     
+    prende_i_voti(&file, a[1], voti, pesi);
+
     if(file != NULL){
         fclose(file);
     }
