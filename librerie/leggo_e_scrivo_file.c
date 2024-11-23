@@ -19,53 +19,30 @@ void eliminaFile(FILE **file, char nome[]){
     }
 }
 
-void ins_materie(FILE **file, char fileName[], char input[]){
-    if (*file = fopen(fileName, "r")){
-        *file = fopen(fileName, "a");
-        fprintf(*file, input); 
-    }else{
-        perror("impossibile aprire il file");
-    }
-}
-
-void crea_file_materie(FILE **file, char fileName[], char path[], char extention[]){
+void crea_file_materie(FILE **file, char nome[], char path[], char extention[]){
     if(file == NULL){
         printf("Inpossibile aprire il file\n");
     }else{
-        *file = fopen(fileName, "r");
+        *file = fopen(nome, "r");
         char buffer[255];
 
         char result[1024];
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
-            buffer[strcspn(buffer, "\n")] = '\0';
+            
             snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
             fopen(result, "w");
         }
     }
 }
 
-void ins_voti(FILE **file, char fileName[], int voto, int peso){
-    if(voto > 10 || voto < 0 && peso >100 || peso < 0){
-        printf("Valori non validi\n");
-    }else{
-        if(*file = fopen(fileName, "r")){
-            *file = fopen(fileName, "a");
-            fprintf(*file, "%d\n",voto);
-            fprintf(*file, "%d\n",peso); 
-        }   else{
-            perror("Impossibile aprire il file");
-        }
-    }
-}
-
-void prende_i_voti(FILE **file, char fileName[], float *voti, float *pesi){
-    if(*file = fopen("materie/eletronica.txt", "r")){
+void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
+    if(*file = fopen(nome, "r")){
         char buffer[50];
         char *endptr;
 
         int i;
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
-            
+            buffer[strcspn(buffer, "\n")] = '\0';
             voti[i] = strtof(buffer, NULL);
             
             if (voti[i] == 0 && buffer[0] != '0') {  // Se non è un numero valido
@@ -84,5 +61,18 @@ void prende_i_voti(FILE **file, char fileName[], float *voti, float *pesi){
         }
     }else{
         perror("Impossibile aprire il file");
+    }
+}
+
+void input(char *input){
+    fgets(input, sizeof(input),stdin);
+}
+
+void ins(FILE **file, char fileName[], char input[]){
+    if (*file = fopen(fileName, "r")){
+        *file = fopen(fileName, "a");
+        fprintf(*file, input); 
+    }else{
+        perror("impossibile aprire il file");
     }
 }
