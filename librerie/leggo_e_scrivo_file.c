@@ -42,7 +42,7 @@ void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
 
         int i;
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
-            
+            buffer[strcspn(buffer, "\n")] = '\0';
             voti[i] = strtof(buffer, NULL);
             
             if (voti[i] == 0 && buffer[0] != '0') {  // Se non è un numero valido
@@ -66,7 +66,6 @@ void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
 
 void input(char *input){
     fgets(input, sizeof(input),stdin);
-    input[strcspn(input, "\n")] = '\0';
 }
 
 void ins(FILE **file, char fileName[], char input[]){
