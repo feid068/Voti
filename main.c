@@ -1,32 +1,30 @@
 #include <stdio.h>
-#include "funzioni_della_media.h"
-#include "leggo_e_scrivo_file.h"
+#include "librerie/funzioni_della_media.h"
+#include "librerie/leggo_e_scrivo_file.h"
 
-float voti[15];
-float pesi[15];
-float media[1];
+# define MAX_SIZE 25
+
+float voti[MAX_SIZE];
+float pesi[MAX_SIZE];
+float media[MAX_SIZE];
+char nome[] = "materie/eletronica.txt";
 
 int main(){
     FILE *file;
-    /*voti[0] = 7.5;
-    voti[1] = 7.5;
-    voti[2] = 7.75;
-    pesi[0] = 100;
-    pesi[1] = 50;
-    pesi[2] = 100;
+    char a[50];
 
+    input(a);
+    ins(&file, "materie.txt", a);
 
-    int size = sizeof(voti)/sizeof(voti[0]); 
-    media_ponderata(voti, pesi, media, size);
-
-    for (int i = 0; i < sizeof(media)/sizeof(media[0]); i++){
-        printf("La media è %.2f\n", media[i]);
-    }*/
-   creaFile(&file, "dfhd");
+    //prende_i_voti(&file, nome, voti, pesi);
+    //int size = sizeof(voti)/sizeof(voti[0]); 
+    //media_ponderata(voti, pesi, media, size);
+//for (int i = 0; i < sizeof(media)/sizeof(media[0]); i++){
+        //printf("La media è %.2f\n", media[i]);
+    //}
     
     if(file != NULL){
         fclose(file);
     }
-
     return 0;
 }
