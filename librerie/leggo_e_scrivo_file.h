@@ -10,10 +10,7 @@ void eliminaFile(FILE **file, char nome[]);
 void crea_file_materie(FILE **file, char nome[], char path[], char extention[]);
 //prende i voti dal file e li mette nelle corrispettive liste
 void prende_i_voti(FILE **file,char nome[], float *voti, float *pesi);
-//prende gli input
-//void input(char *input);
-//inserisce gli input in un file
-//void ins(FILE **file,char fileName[],char input[]);
+//prende i voti e li inserisce nel file adeguato
 void ins_voti(FILE **file, char fileName[], float voto, float peso);
-
+//prende i le materie e le inserisce nel file adeguato
 void ins_materie(FILE **file, char fileName[], char input[]);
