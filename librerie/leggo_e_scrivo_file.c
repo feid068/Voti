@@ -19,19 +19,32 @@ void eliminaFile(FILE **file, char nome[]){
     }
 }
 
-void crea_file_materie(FILE **file, char nome[], char path[], char extention[]){
-    if(file == NULL){
-        printf("Inpossibile aprire il file\n");
-    }else{
-        *file = fopen(nome, "r");
+void crea_file_materie(FILE **file, char nome[], char path[], char extention[],char arrey_mat[15][1024]){
+    if((*file = fopen(nome, "r")) != NULL){
         char buffer[255];
 
         char result[1024];
+        int i = 0;
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
             
+            buffer[strlen(buffer)-1] = '\0';
             snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
-            fopen(result, "w");
+            
+            if(fopen(result, "r") != NULL){
+                if(i < 15){
+                    strncpy(arrey_mat[i], result, 1024);
+                    arrey_mat[i][1023] = '\0';  // Ensure null termination
+                    i++;
+                }else{
+                    perror("Arrivato al limite di numeri");
+                    break;
+                }
+            }else{
+                fopen(result, "w");
+            }
         }
+    }else{
+        perror("Impossibile aprire il file");
     }
 }
 
