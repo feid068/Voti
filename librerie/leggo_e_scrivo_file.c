@@ -64,11 +64,33 @@ void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
     }
 }
 
-void input(char *input){
+/*void input(char *input){
     fgets(input, sizeof(input),stdin);
 }
 
 void ins(FILE **file, char fileName[], char input[]){
+    if (*file = fopen(fileName, "r")){
+        *file = fopen(fileName, "a");
+        fprintf(*file, input); 
+    }else{
+        perror("impossibile aprire il file");
+    }
+}*/
+void ins_voti(FILE **file, char fileName[], float voto, float peso){
+    if(voto > 10 || voto < 0 && peso >100 || peso < 0){
+        printf("Valori non validi\n");
+    }else{
+        if(*file = fopen(fileName, "r")){
+            *file = fopen(fileName, "a");
+            fprintf(*file, "%.2f\n",voto);
+            fprintf(*file, "%.2f\n",peso); 
+        }else{
+            perror("Impossibile aprire il file");
+        }
+    }
+}
+
+void ins_materie(FILE **file, char fileName[], char input[]){
     if (*file = fopen(fileName, "r")){
         *file = fopen(fileName, "a");
         fprintf(*file, input); 
