@@ -92,9 +92,9 @@ void ins_voti(FILE **file, char fileName[], float voto, float peso){
 }
 
 void ins_materie(FILE **file, char fileName[], char input[]){
-    if (*file = fopen(fileName, "r")){
+    if (fopen(fileName, "r")){
         *file = fopen(fileName, "a");
-        fprintf(*file, input); 
+        fprintf(*file, input);
     }else{
         perror("impossibile aprire il file");
     }

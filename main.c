@@ -12,6 +12,11 @@ float media[MAX_SIZE];
 int main(){
     FILE *file;
     
+    char a[50];
+    fgets(a, 50, stdin);
+    ins_materie(&file, "materie.txt", a);
+
+
     if(file != NULL){
         fclose(file);
     }
