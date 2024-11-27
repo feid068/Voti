@@ -92,9 +92,22 @@ void ins_voti(FILE **file, char fileName[], float voto, float peso){
 }
 
 void ins_materie(FILE **file, char fileName[], char input[]){
-    if (fopen(fileName, "r")){
-        *file = fopen(fileName, "a");
-        fprintf(*file, input);
+    if ((*file = fopen(fileName, "r")) != NULL){
+        char buffer[255];
+        
+        while (fgets(buffer, sizeof(buffer), *file) != NULL){            
+            if(strcasecmp(buffer, input) != 0 && strcasecmp(buffer+1, input) != 0){
+                /**file = fopen(fileName, "a");
+                fprintf(*file, input);
+                fflush(*file);*/
+                printf("Nessuna materia uguale\n");
+                break;
+            }else{
+                printf("Materia gia creata\n");
+                break;
+            }
+        }
+
     }else{
         perror("impossibile aprire il file");
     }
