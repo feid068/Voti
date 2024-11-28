@@ -100,20 +100,19 @@ void ins_materie(FILE **file, char fileName[], char input[]){
         while(fgets(buffer, sizeof(buffer), *file) != NULL){
             if(strcasecmp(buffer, input) == 0){
                 matDoppia = true;
+                break;
             }
         }
-        //printf("%d\n", matDoppia);
+        
         if(matDoppia == false){
-            printf("dentro l' if\n");
-            while (fgets(buffer, sizeof(buffer), *file) != NULL){
-                *file = fopen(fileName, "a");
-                fprintf(*file, input);
-                fflush(*file);
-                printf("materia aggiunta\b");
-            }
-       }else{
-            printf("Materia doppia\n");}
-        matDoppia = false;
+            *file = fopen(fileName, "a");
+            fprintf(*file, input);
+            fflush(*file);
+            printf("materia aggiunta\n");
+        }else{
+            printf("Materia doppia\n");
+            matDoppia = false;
+        }
 
     }else{
         perror("impossibile aprire il file");

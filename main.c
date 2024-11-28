@@ -26,7 +26,7 @@ int main(){
             fgets(mat, 50, stdin);
 
             ins_materie(&file, nome, mat);
-            //crea_file_materie(&file, nome, path, extention, arrey_mat);
+            crea_file_materie(&file, nome, path, extention, arrey_mat);
             Menu = menu();
             break;
         case 5:
