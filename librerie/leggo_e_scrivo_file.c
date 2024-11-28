@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<stdbool.h>
 
 void creaFile(FILE **file, char nome[]){
     if(*file = fopen(nome, "r")){
@@ -94,19 +95,25 @@ void ins_voti(FILE **file, char fileName[], float voto, float peso){
 void ins_materie(FILE **file, char fileName[], char input[]){
     if ((*file = fopen(fileName, "r")) != NULL){
         char buffer[255];
-        
-        while (fgets(buffer, sizeof(buffer), *file) != NULL){            
-            if(strcasecmp(buffer, input) != 0 && strcasecmp(buffer+1, input) != 0){
-                /**file = fopen(fileName, "a");
-                fprintf(*file, input);
-                fflush(*file);*/
-                printf("Nessuna materia uguale\n");
-                break;
-            }else{
-                printf("Materia gia creata\n");
-                break;
+
+        bool matDoppia = false;
+        while(fgets(buffer, sizeof(buffer), *file) != NULL){
+            if(strcasecmp(buffer, input) == 0){
+                matDoppia = true;
             }
         }
+        //printf("%d\n", matDoppia);
+        if(matDoppia == false){
+            printf("dentro l' if\n");
+            while (fgets(buffer, sizeof(buffer), *file) != NULL){
+                *file = fopen(fileName, "a");
+                fprintf(*file, input);
+                fflush(*file);
+                printf("materia aggiunta\b");
+            }
+       }else{
+            printf("Materia doppia\n");}
+        matDoppia = false;
 
     }else{
         perror("impossibile aprire il file");
