@@ -42,9 +42,8 @@ int main(){
             printf("In che materia vuoi aggiungere i voti?\n");
             prende_nomi(&file, nome,arrey_mat);
             for(int i = 0; i < 15; i++){
-                //int j = 1;
                 if(strlen(arrey_mat[i]) > 1){
-                    printf("%d%s",i+1,arrey_mat[i]);
+                    printf("%s: %d\n",arrey_mat[i],i+1);
                 }
             }
             path(&file, nome, Path, extention, arrey_mat);

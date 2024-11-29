@@ -125,6 +125,7 @@ void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]){
 
         int i = 0;
         while(fgets(buffer, sizeof(buffer), *file) != NULL){
+            buffer[strlen(buffer)-1] = '\0';
             if(i < 15){
                 strcpy(arrey_mat[i], buffer);
                 arrey_mat[i][1024 - 1] = '\0';
