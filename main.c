@@ -34,7 +34,10 @@ int main(){
             prende_nomi(&file, nome,arrey_mat);
 
             for(int i = 0; i < 15; i++){
-                printf("%s",arrey_mat[i]);
+                
+                if(strlen(arrey_mat[i]) > 1){
+                    printf("%s\n",arrey_mat[i]);
+                }
             }
             Menu = menu();
             break;
