@@ -14,3 +14,7 @@ void prende_i_voti(FILE **file,char nome[], float *voti, float *pesi);
 void ins_voti(FILE **file, char fileName[], float voto, float peso);
 //prende i le materie e le inserisce nel file adeguato
 void ins_materie(FILE **file, char fileName[], char input[]);
+
+void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]);
+
+void path(FILE **file, char nome[], char path[], char extention[],char arrey_mat[15][1024]);

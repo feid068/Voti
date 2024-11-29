@@ -118,3 +118,41 @@ void ins_materie(FILE **file, char fileName[], char input[]){
         perror("impossibile aprire il file");
     }
 }
+
+void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]){
+    if((*file = fopen(nome,"r")) != NULL){
+        char buffer[255];
+
+        int i = 0;
+        while(fgets(buffer, sizeof(buffer), *file) != NULL){
+            if(i < 15){
+                strcpy(arrey_mat[i], buffer);
+                arrey_mat[i][1024 - 1] = '\0';
+                i++;  
+            }else{
+                printf("arrey riempito\n");
+            }
+        }
+    }else{
+        perror("Impossibile aprire il file");
+    }
+}
+
+void path(FILE **file,char nome[], char path[], char extention[],char arrey_mat[15][1024]){
+    if((*file = fopen(nome, "r")) != NULL){
+        char buffer[255];
+
+        char result[1024];
+        int i = 0;
+        while (fgets(buffer, sizeof(buffer), *file) != NULL){
+            
+        buffer[strlen(buffer)-1] = '\0';
+        snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
+        }
+        for(int i = 0; i < 15; i++){
+            strcpy(arrey_mat[i], result);
+        }
+    }else{
+        perror("Impossibile aprire il file");
+    }
+}
