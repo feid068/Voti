@@ -85,7 +85,9 @@ void ins_voti(FILE **file, char fileName[], float voto, float peso){
         if(*file = fopen(fileName, "r")){
             *file = fopen(fileName, "a");
             fprintf(*file, "%.2f\n",voto);
+            fflush(*file);
             fprintf(*file, "%.2f\n",peso); 
+            fflush(*file);
         }else{
             perror("Impossibile aprire il file");
         }
@@ -147,13 +149,18 @@ void path(FILE **file,char nome[], char path[], char extention[],char arrey_mat[
         int i = 0;
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
             
-        buffer[strlen(buffer)-1] = '\0';
-        snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
+            buffer[strlen(buffer)-1] = '\0';
+            snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
+            if(fopen(result, "r") != NULL){
+                if(i < 15){
+                    strncpy(arrey_mat[i], result, 1024);
+                    arrey_mat[i][1023] = '\0';  // Ensure null termination
+                    i++;
+                }else{
+                    perror("Arrivato al limite di numeri");
+                    break;
+                }
+            }
         }
-        for(int i = 0; i < 15; i++){
-            strcpy(arrey_mat[i], result);
-        }
-    }else{
-        perror("Impossibile aprire il file");
     }
 }
