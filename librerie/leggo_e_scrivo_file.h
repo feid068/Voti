@@ -20,3 +20,7 @@ void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]);
 void path(FILE **file, char nome[], char path[], char extention[],char arrey_mat[15][1024]);
 //elimina una materia
 int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line);
+//crea una cartella
+int make_dir(char *folderName);
+//elimina un voto e il suo peso
+int elimina_voto(FILE **file, FILE **temp, int DeliteLine);

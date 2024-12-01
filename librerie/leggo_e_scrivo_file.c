@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 
 void creaFile(FILE **file, char nome[]){
     if(*file = fopen(nome, "r")){
@@ -207,3 +208,14 @@ int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line){
     remove(fileName);
     rename(tem_fileName, fileName);
 }
+
+int make_dir(char *folderName){
+    if (mkdir(folderName, 0700) == -1) {
+        perror("Errore nella creazione della cartella");
+        return 1;
+    }
+
+    printf("Cartella '%s' creata con successo!\n", folderName);
+}
+
+int elimina_voto(FILE **file, FILE **temp, int DeliteLine){}
