@@ -1,25 +1,24 @@
 #include <stdio.h>
-#include <string.h>
 #include "librerie/funzioni_della_media.h"
 #include "librerie/leggo_e_scrivo_file.h"
 
 # define MAX_SIZE 15
 
-float voti[MAX_SIZE];
-float pesi[MAX_SIZE];
+float voti[MAX_SIZE] = {0};
+float pesi[MAX_SIZE] = {0};
 float media[MAX_SIZE];
 char nome[] = "materie.txt";
 char Path[] = "materie/";
 char extention[] = ".txt";
-char arrey_mat[MAX_SIZE][1024];
+char arrey_mat[MAX_SIZE][1024] = {"\0"};
 
 int menu();
 
 int main(){
-    FILE *file;
+    FILE *file, *temp;
 
-   int Menu= menu();
-    while (Menu != 5){
+    int Menu= menu();
+    while (Menu != 6){
         switch (Menu){
         case 1:
             char mat[50];
@@ -72,27 +71,61 @@ int main(){
                     printf("%s: %d\n",arrey_mat[i],i+1);
                 }
             }
+            
             path(&file, nome, Path, extention, arrey_mat);
             printf("Che materia vuoi guardare?\n");
-            scanf("%d", &a);
+            scanf("%d", &b);
+            if(b < 0|| b > 14){
+                printf("valori non validi\n");
+                return 1;
+            }
             b = b - 1;
-            prende_i_voti(&file,arrey_mat[b], voti, pesi);
+            prende_i_voti(&file, arrey_mat[b], voti, pesi);
             for(int i = 0; i < 15; i++){
-                printf("%.2f\n", arrey_mat[i]);
+                if(voti[i] != 0){
+                    printf("%.2f al %.2f%%\n", voti[i], pesi[i]);
+                }else{
+                    printf("Nessun voto in questa materia\n");
+                    break;
+                }
             }
             Menu = menu();
             break;
         case 5:
+            int delete_line = 0;
+            char path_mat[255];
+            char temp_arr_mat[MAX_SIZE][1024] = {"\0"};
+            prende_nomi(&file, nome,temp_arr_mat);
+            printf("Che materia vuoi eliminare?\n");
+            for(int i = 0; i < 15; i++){
+                if(strlen(temp_arr_mat[i]) > 1){
+                    printf("%s: %d\n",temp_arr_mat[i],i+1);
+                }
+            }
+            scanf("%d", &delete_line);
+            
+            elimina_mat(&file, &temp, nome, delete_line);
+            
+            delete_line = delete_line - 1;
+
+            for (int i = 0; i < 15; i++){
+                if(strlen(temp_arr_mat[i]) > 1){
+                    snprintf(arrey_mat[i], sizeof(arrey_mat), "%s%s%s", Path, temp_arr_mat[i], extention);
+                }
+            }
+            eliminaFile(&file, arrey_mat[delete_line]);
+            
+            
+            printf("Materia eliminata: %s\n", temp_arr_mat[delete_line]);
+            Menu = menu();
+            break;
+        case 6:
             return 1;
             break;
         default:
             printf("Valore non validi\n");
             break;
         }
-    }
-
-    if(file != NULL){
-        fclose(file);
     }
     return 0;
 }
@@ -104,7 +137,8 @@ int menu(){
     printf("Per ossevare le materie: 2\n");
     printf("Per aggiungere un voto: 3\n");
     printf("Per guardale i voti di una materia: 4\n");
-    printf("Esci: 5\n");
+    printf("Per eliminare una materia: 5\n");
+    printf("Esci: 6\n");
     scanf("%d", &input);
     fgetc(stdin);
     return input;

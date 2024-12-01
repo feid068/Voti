@@ -1,11 +1,12 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 void creaFile(FILE **file, char nome[]){
     if(*file = fopen(nome, "r")){
         printf("file gia creato");
+        fclose(*file);
     }else if(*file = fopen(nome, "w")){
         printf("file cerato\n");
     }
@@ -15,6 +16,7 @@ void eliminaFile(FILE **file, char nome[]){
     if(*file = fopen(nome, "r")){
         remove(nome);
         printf("file eliminato\n");
+        fclose(*file);
     }else{
         printf("file gia eliminato\n");
     }
@@ -44,17 +46,17 @@ void crea_file_materie(FILE **file, char nome[], char path[], char extention[],c
                 fopen(result, "w");
             }
         }
+        fclose(*file);
     }else{
         perror("Impossibile aprire il file");
     }
 }
 
-void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
-    if(*file = fopen(nome, "r")){
+void prende_i_voti(FILE **file, char *nome, float *voti, float *pesi){
+    if((*file = fopen(nome, "r")) != NULL){
         char buffer[50];
-        char *endptr;
 
-        int i;
+        int i = 0;
         while (fgets(buffer, sizeof(buffer), *file) != NULL){
             buffer[strcspn(buffer, "\n")] = '\0';
             voti[i] = strtof(buffer, NULL);
@@ -73,6 +75,7 @@ void prende_i_voti(FILE **file, char nome[], float *voti, float *pesi){
             }
             i++;
         }
+        fclose(*file);
     }else{
         perror("Impossibile aprire il file");
     }
@@ -88,6 +91,7 @@ void ins_voti(FILE **file, char fileName[], float voto, float peso){
             fflush(*file);
             fprintf(*file, "%.2f\n",peso); 
             fflush(*file);
+            fclose(*file);
         }else{
             perror("Impossibile aprire il file");
         }
@@ -115,7 +119,7 @@ void ins_materie(FILE **file, char fileName[], char input[]){
             printf("Materia doppia\n");
             matDoppia = false;
         }
-
+        fclose(*file);
     }else{
         perror("impossibile aprire il file");
     }
@@ -136,6 +140,7 @@ void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]){
                 printf("arrey riempito\n");
             }
         }
+        fclose(*file);
     }else{
         perror("Impossibile aprire il file");
     }
@@ -162,5 +167,43 @@ void path(FILE **file,char nome[], char path[], char extention[],char arrey_mat[
                 }
             }
         }
+        fclose(*file);
     }
+}
+
+int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line){
+
+   char tem_fileName[1024];
+   char buffer[2048];
+
+    strcpy(tem_fileName, "temp____");
+    strcat(tem_fileName, fileName);
+
+    *file = fopen(fileName, "r");
+    *temp = fopen(tem_fileName, "w");
+
+    if(*file == NULL || *temp == NULL){
+        perror("Error opening file(s)");
+        return 1;
+    }
+
+    bool keep_reading = true;
+    int current_Line = 1;
+    do{
+        fgets(buffer, 2048, *file);
+
+        if(feof(*file)) {
+            keep_reading = false;
+        }else if (current_Line != delete_line){
+            fputs(buffer, *temp);
+        }
+        current_Line++;
+        
+    }while (keep_reading);
+    
+    fclose(*file);
+    fclose(*temp);
+
+    remove(fileName);
+    rename(tem_fileName, fileName);
 }
