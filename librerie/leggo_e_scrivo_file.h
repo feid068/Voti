@@ -23,4 +23,4 @@ int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line);
 //crea una cartella
 int make_dir(char *folderName);
 //elimina un voto e il suo peso
-int elimina_voto(FILE **file, FILE **temp, int DeliteLine);
+int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char fileName[],char extention[], char path[]);

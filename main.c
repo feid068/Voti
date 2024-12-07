@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include "librerie/funzioni_della_media.h"
 #include "librerie/leggo_e_scrivo_file.h"
 
@@ -96,6 +97,7 @@ int main(){
                     break;
                 }
             }
+            sleep(5);
             system("clear");
             Menu = menu();
             break;
@@ -129,6 +131,7 @@ int main(){
             }
             
             printf("Materia eliminata: %s\n", temp_arr_mat[delete_line]);
+            sleep(5);
             system("clear");
             Menu = menu();
             break;
@@ -136,8 +139,12 @@ int main(){
             float VOti = 0;
             float PEsi = 0;
             int c = 0;
+            int d = 0;
             char Temp_arr_mat[MAX_SIZE][1024] = {"\0"};
+            bool voti_es = true;
+
             printf("In che materia vuoi togliere i voti?\n");
+            
             prende_nomi(&file, nome,arrey_mat);
             for(int i = 0; i < 15; i++){
                 if(strlen(arrey_mat[i]) > 1){
@@ -145,17 +152,41 @@ int main(){
                 }
             }
             scanf("%d", &c);
-            int d = c;
             c = c - 1;
-
+            
             path(&file, nome, Path, extention, arrey_mat);
+            
+            prende_i_voti(&file, arrey_mat[c], voti, pesi);
 
-            elimina_voto(&file, &temp, d);
+            for (int i = 0; i < MAX_SIZE; i++){
+                if(voti[i] != 0){
+                    printf("%.2f  %d\n", voti[i], i+1);
+                }
+            }
 
             for (int i = 0; i < MAX_SIZE; i++){
                 strcpy(arrey_mat[i], "\0");   
             }
-            sleep(5);
+
+            printf("Che voto vuoi eliminare?\n");
+            
+            scanf("%d", &d);
+            
+            prende_nomi(&file, nome, arrey_mat);
+
+            d = d - 1;
+            char VOto[255];
+            sprintf(VOto, "%.2f", voti[d]);
+
+            elimina_voto(&file, &temp, VOto, arrey_mat[c], extention, Path);
+
+            printf("Voto eliminato!\n");
+
+
+            for (int i = 0; i < MAX_SIZE; i++){
+                strcpy(arrey_mat[i], "\0");
+                voti[i] = 0;
+            }
             system("clear");
             Menu = menu();
             break;

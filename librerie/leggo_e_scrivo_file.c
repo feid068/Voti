@@ -218,4 +218,38 @@ int make_dir(char *folderName){
     printf("Cartella '%s' creata con successo!\n", folderName);
 }
 
-int elimina_voto(FILE **file, FILE **temp, int DeliteLine){}
+int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],char extention[], char path[]){
+    char tem_file_Name[1024];
+    char tem_fileName[1024];
+    char buffer[2048];
+    char fileName[255];
+    char votoDopio[15][255];
+
+    strcpy(tem_file_Name, "temp____");
+    strcat(tem_file_Name, file_Name);
+    snprintf(fileName, sizeof(fileName), "%s%s%s", path, file_Name, extention);
+    snprintf(tem_fileName, sizeof(tem_fileName), "%s%s%s", path, tem_file_Name, extention);
+
+    *file = fopen(fileName, "r");
+    *temp = fopen(tem_fileName, "w");
+
+    if(*file == NULL || *temp == NULL){
+        perror("Error opening file(s)");
+        return 1;
+    }
+
+    while(fgets(buffer, sizeof(buffer), *file) != NULL){
+        buffer[strcspn(buffer, "\n")] = '\0';
+
+        if (strcmp(buffer, DeliteLine) != 0){
+            strcat(buffer, "\n");
+            fputs(buffer, *temp);
+        }
+    }
+    
+    fclose(*file);
+    fclose(*temp);
+
+    remove(fileName);
+    rename(tem_fileName, fileName);
+}
