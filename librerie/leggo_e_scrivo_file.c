@@ -4,6 +4,16 @@
 #include <stdbool.h>
 #include <sys/stat.h>
 
+# define MAX_SIZE 15
+
+typedef struct{
+    char tipo[50];
+    float voti[MAX_SIZE];
+    float pesi[MAX_SIZE];
+    int linea;
+}StudentVote;
+
+
 void creaFile(FILE **file, char nome[]){
     if(*file = fopen(nome, "r")){
         printf("file gia creato");
@@ -53,46 +63,17 @@ void crea_file_materie(FILE **file, char nome[], char path[], char extention[],c
     }
 }
 
-void prende_i_voti(FILE **file, char *nome, float *voti, float *pesi){
-    if((*file = fopen(nome, "r")) != NULL){
-        char buffer[50];
-
-        int i = 0;
-        while (fgets(buffer, sizeof(buffer), *file) != NULL){
-            buffer[strcspn(buffer, "\n")] = '\0';
-            voti[i] = strtof(buffer, NULL);
-            
-            if (voti[i] == 0 && buffer[0] != '0') {  // Se non è un numero valido
-                printf("Errore nella lettura del voto alla linea %d\n", i+1);
-                break;  // Esce dal ciclo se c'è un errore
-            }
-            if (fgets(buffer, sizeof(buffer), *file) != NULL) {
-                pesi[i] = strtof(buffer, NULL);
-                
-                if (pesi[i] == 0 && buffer[0] != '0') {  // Se non è un numero valido
-                    printf("Errore nella lettura del peso alla linea %d\n", i+1);
-                    break;  // Esce dal ciclo se c'è un errore
-                }
-            }
-            i++;
-        }
-        fclose(*file);
-    }else{
-        perror("Impossibile aprire il file");
-    }
-}
-
-void ins_voti(FILE **file, char fileName[], float voto, float peso){
+void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[]){//da sistemare:aggiunta linea al fprintf
     if(voto > 10 || voto < 0 && peso >100 || peso < 0){
         printf("Valori non validi\n");
     }else{
+        static int  i = 1;
         if(*file = fopen(fileName, "r")){
             *file = fopen(fileName, "a");
-            fprintf(*file, "%.2f\n",voto);
-            fflush(*file);
-            fprintf(*file, "%.2f\n",peso); 
+            fprintf(*file, "%s,%.2f,%.2f,%d\n",tipo,voto, peso, i);
             fflush(*file);
             fclose(*file);
+            i++;
         }else{
             perror("Impossibile aprire il file");
         }
@@ -242,8 +223,9 @@ int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],c
         buffer[strcspn(buffer, "\n")] = '\0';
 
         if (strcmp(buffer, DeliteLine) != 0){
-            strcat(buffer, "\n");
-            fputs(buffer, *temp);
+            fprintf(*temp, "%s\n", buffer);
+            //strcat(buffer, "\n");
+            //fputs(buffer, *temp);
         }
     }
     
@@ -252,4 +234,29 @@ int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],c
 
     remove(fileName);
     rename(tem_fileName, fileName);
+}
+
+int prendi_voti(StudentVote StudentVote[100], FILE **file, char fileName[]){
+    *file = fopen(fileName, "r");
+    if (*file == NULL){
+        perror("Impossibile aprire il file");
+        return 1;
+    }
+
+    int read = 0;
+    int i = 0;
+    do
+    {
+        //read = 
+        fscanf(*file,
+                        "%49[^,],%f,%f,%d",
+                        StudentVote[i].tipo,
+                        &StudentVote[i].voti[i],
+                        &StudentVote[i].pesi[i],
+                        &StudentVote[i].linea
+                    );
+        i++;
+    } while (!feof(*file));
+
+    fclose(*file);
 }

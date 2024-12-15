@@ -8,18 +8,17 @@
 
 # define MAX_SIZE 15
 
-float voti[MAX_SIZE] = {0};
-float pesi[MAX_SIZE] = {0};
-float media[MAX_SIZE];
 char nome[] = "materie.txt";
 char Path[] = "materie/";
-char extention[] = ".txt";
+char extention[] = ".csv";
 char arrey_mat[MAX_SIZE][1024] = {"\0"};
 
 int menu();
 
 int main(){
     FILE *file, *temp;
+
+    StudentVote VOti[15];
 
     int Menu= menu();
     while (Menu != 7){
@@ -50,6 +49,7 @@ int main(){
         case 3:
             float Voti = 0;
             float Pesi = 0;
+            char tipo[50];
             printf("In che materia vuoi aggiungere i voti?\n");
             prende_nomi(&file, nome,arrey_mat);
             for(int i = 0; i < 15; i++){
@@ -59,14 +59,15 @@ int main(){
             }
             path(&file, nome, Path, extention, arrey_mat);
             int a = 0;
-            printf("inserisci voto e peso:\n");
             scanf("%d", &a);
+            printf("che tipo di voto è\n");
+            scanf("%s", tipo);
             printf("Inserisci il voto\n");
             scanf("%f", &Voti);
             printf("Inserisci il peso\n");
             scanf("%f", &Pesi);
             a = a - 1;
-            ins_voti(&file, arrey_mat[a], Voti, Pesi);
+            ins_voti(&file, arrey_mat[a], Voti, Pesi, tipo);
             
             system("clear");
             Menu = menu();
@@ -74,6 +75,7 @@ int main(){
         case 4:
             int b = 0;
             prende_nomi(&file, nome,arrey_mat);
+            printf("Che materia vuoi guardare?\n");
             for(int i = 0; i < 15; i++){
                 if(strlen(arrey_mat[i]) > 1){
                     printf("%s: %d\n",arrey_mat[i],i+1);
@@ -81,19 +83,20 @@ int main(){
             }
             
             path(&file, nome, Path, extention, arrey_mat);
-            printf("Che materia vuoi guardare?\n");
             scanf("%d", &b);
             if(b < 0|| b > 14){
                 printf("valori non validi\n");
                 return 1;
             }
             b = b - 1;
-            prende_i_voti(&file, arrey_mat[b], voti, pesi);
+
+            prendi_voti(VOti, &file, arrey_mat[b]);
+            
             for(int i = 0; i < 15; i++){
-                if(voti[i] != 0){
-                    printf("%.2f al %.2f%%\n", voti[i], pesi[i]);
+                if(VOti[i].voti[i] != 0){
+                    printf("%.2f al %.2f%%\n", VOti[i].voti[i], VOti[i].pesi[i]);
                 }else{
-                    printf("Nessun voto in questa materia\n");
+                    printf("Voti finiti in questa materia\n");
                     break;
                 }
             }
@@ -135,8 +138,8 @@ int main(){
             system("clear");
             Menu = menu();
             break;
-        case 6:
-            float VOti = 0;
+        case 6://Da sistemare: elimina solo la prima riga del file.csv
+            float VOTI = 0;
             float PEsi = 0;
             int c = 0;
             int d = 0;
@@ -156,42 +159,36 @@ int main(){
             
             path(&file, nome, Path, extention, arrey_mat);
             
-            prende_i_voti(&file, arrey_mat[c], voti, pesi);
+            prendi_voti(VOti, &file, arrey_mat[c]);
 
             for (int i = 0; i < MAX_SIZE; i++){
-                if(voti[i] != 0){
-                    printf("%.2f  %d\n", voti[i], i+1);
+                if(VOti[i].voti[i] != 0){
+                    printf("%.2f  %d\n", VOti[i].voti[i], i+1);
                 }
             }
-
-            for (int i = 0; i < MAX_SIZE; i++){
-                strcpy(arrey_mat[i], "\0");   
-            }
-
             printf("Che voto vuoi eliminare?\n");
             
             scanf("%d", &d);
-            
-            prende_nomi(&file, nome, arrey_mat);
 
             d = d - 1;
-            char VOto[255];
-            sprintf(VOto, "%.2f", voti[d]);
+            char VOTO[255];
+            sprintf(VOTO, "%s,%.2f,%.2f,%d", VOti[d].tipo,VOti[d].voti[d],VOti[d].pesi[d],VOti[d].linea);
 
-            elimina_voto(&file, &temp, VOto, arrey_mat[c], extention, Path);
+            if(elimina_voto(&file, &temp, VOTO, arrey_mat[c], extention, Path) != 0){
+                return 1;
+            }
 
             printf("Voto eliminato!\n");
 
-
             for (int i = 0; i < MAX_SIZE; i++){
                 strcpy(arrey_mat[i], "\0");
-                voti[i] = 0;
+                VOti[i].voti[i] = 0;
             }
             system("clear");
             Menu = menu();
             break;
         case 7:
-            return 1;
+            return 0;
             break;
         default:
             Menu = 7;
