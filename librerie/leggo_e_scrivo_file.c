@@ -63,17 +63,15 @@ void crea_file_materie(FILE **file, char nome[], char path[], char extention[],c
     }
 }
 
-void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[]){//da sistemare:aggiunta linea al fprintf
+void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[], int riga){//da sistemare:aggiunta linea al fprintf
     if(voto > 10 || voto < 0 && peso >100 || peso < 0){
         printf("Valori non validi\n");
     }else{
-        static int  i = 1;
         if(*file = fopen(fileName, "r")){
             *file = fopen(fileName, "a");
-            fprintf(*file, "%s,%.2f,%.2f,%d\n",tipo,voto, peso, i);
+            fprintf(*file, "%s,%.2f,%.2f,%d\n",tipo,voto, peso, (riga+1));
             fflush(*file);
             fclose(*file);
-            i++;
         }else{
             perror("Impossibile aprire il file");
         }
@@ -213,6 +211,10 @@ int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],c
 
     *file = fopen(fileName, "r");
     *temp = fopen(tem_fileName, "w");
+    
+    if (DeliteLine[0] == '\n') {
+        memmove(DeliteLine, DeliteLine + 1, strlen(DeliteLine));
+    }
 
     if(*file == NULL || *temp == NULL){
         perror("Error opening file(s)");
@@ -224,8 +226,6 @@ int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],c
 
         if (strcmp(buffer, DeliteLine) != 0){
             fprintf(*temp, "%s\n", buffer);
-            //strcat(buffer, "\n");
-            //fputs(buffer, *temp);
         }
     }
     
@@ -259,4 +259,55 @@ int prendi_voti(StudentVote StudentVote[100], FILE **file, char fileName[]){
     } while (!feof(*file));
 
     fclose(*file);
+}
+
+void modifica_valore_csv(const char *nome_file, int riga, int colonna, const char *nuovo_valore){
+    FILE *file = fopen(nome_file, "r+");  // Apre il file per lettura e scrittura
+    if (file == NULL) {
+        perror("Errore nell'aprire il file");
+        return;
+    }
+
+    char line[1024];
+    int riga_corrente = 1;
+
+    // Leggi il file riga per riga
+    while (fgets(line, sizeof(line), file)) {
+        if (riga_corrente == riga) {
+            char campo[100];
+            int colonna_corrente = 1;
+            long posizione_iniziale = ftell(file) - strlen(line); // Posizione iniziale della riga
+
+            // Elabora ogni campo della riga
+            char *token = strtok(line, ",");
+            long posizione = posizione_iniziale; // Ripristina la posizione iniziale
+            while (token != NULL) {
+                if (colonna_corrente == colonna) {
+                    fseek(file, posizione, SEEK_SET);  // Torna alla posizione giusta
+                    fprintf(file, "%s", nuovo_valore);  // Scrive il nuovo valore
+                    fflush(file);  // Assicura che i dati siano scritti nel file
+                    break;
+                }
+                posizione += strlen(token) + 1; // Aggiungi la lunghezza del campo + la virgola
+                token = strtok(NULL, ",");
+                colonna_corrente++;
+            }
+            break;
+        }
+        riga_corrente++;
+    }
+    fclose(file);  // Chiude il file
+}
+
+int righe_in_file(FILE **file, char nome_file[]){
+    if((*file = fopen(nome_file, "r")) == NULL){
+        perror("Impossibile aprire il file:");
+        return 1;
+    }
+    int tot_line = 0;
+    char buffer[255];
+    while (fgets(buffer, sizeof(buffer), *file) != NULL){
+        tot_line++;
+    }
+    return tot_line;
 }

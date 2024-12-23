@@ -18,7 +18,7 @@ void eliminaFile(FILE **file, char nome[]);
 //prende i valori in un file e li mette in una lista
 void crea_file_materie(FILE **file, char nome[], char path[], char extention[],char arrey_mat[15][1024]);
 //prende i voti e li inserisce nel file adeguato
-void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[]);
+void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[], int riga);
 //prende i le materie e le inserisce nel file adeguato
 void ins_materie(FILE **file, char fileName[], char input[]);
 //prende i nomi all'interno di un file
@@ -33,3 +33,7 @@ int make_dir(char *folderName);
 int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char fileName[],char extention[], char path[]);
 //prende i voti dal file
 int prendi_voti(StudentVote voti[15], FILE **file, char fileName[]);
+//cambia un valore in un file .csv
+void modifica_valore_csv(const char *nome_file, int riga, int colonna, const char *nuovo_valore);
+//prende il numero di linee in un file
+int righe_in_file(FILE **file, char nome_file[]);
