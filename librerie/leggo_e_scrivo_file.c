@@ -7,39 +7,43 @@
 # define MAX_SIZE 15
 
 typedef struct{
-    char tipo[50];
+    char tipo[50][MAX_SIZE];
     float voti[MAX_SIZE];
     float pesi[MAX_SIZE];
+    float media;
     int linea;
 }StudentVote;
 
 
-void creaFile(FILE **file, char nome[]){
-    if(*file = fopen(nome, "r")){
+void creaFile(char nome[]){
+    FILE *file;
+    if(file = fopen(nome, "r")){
         printf("file gia creato");
-        fclose(*file);
-    }else if(*file = fopen(nome, "w")){
+        fclose(file);
+    }else if(file = fopen(nome, "w")){
         printf("file cerato\n");
     }
 }
 
-void eliminaFile(FILE **file, char nome[]){
-    if(*file = fopen(nome, "r")){
+void eliminaFile(char nome[]){
+    FILE *file;
+    if(file = fopen(nome, "r")){
         remove(nome);
         printf("file eliminato\n");
-        fclose(*file);
+        fclose(file);
     }else{
         printf("file gia eliminato\n");
     }
 }
 
-void crea_file_materie(FILE **file, char nome[], char path[], char extention[],char arrey_mat[15][1024]){
-    if((*file = fopen(nome, "r")) != NULL){
+void crea_file_materie(char nome[], char path[], char extention[],char arrey_mat[15][1024]){
+    FILE *file;
+    if((file = fopen(nome, "r")) != NULL){
         char buffer[255];
 
         char result[1024];
         int i = 0;
-        while (fgets(buffer, sizeof(buffer), *file) != NULL){
+        while (fgets(buffer, sizeof(buffer), file) != NULL){
             
             buffer[strlen(buffer)-1] = '\0';
             snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
@@ -57,33 +61,35 @@ void crea_file_materie(FILE **file, char nome[], char path[], char extention[],c
                 fopen(result, "w");
             }
         }
-        fclose(*file);
+        fclose(file);
     }else{
         perror("Impossibile aprire il file");
     }
 }
 
-void ins_voti(FILE **file, char fileName[], float voto, float peso, char tipo[], int riga){//da sistemare:aggiunta linea al fprintf
+void ins_voti(char fileName[], float voto, float peso, char tipo[], int riga){//da sistemare:aggiunta linea al fprintf
+    FILE *file;
     if(voto > 10 || voto < 0 && peso >100 || peso < 0){
         printf("Valori non validi\n");
     }else{
-        if(*file = fopen(fileName, "r")){
-            *file = fopen(fileName, "a");
-            fprintf(*file, "%s,%.2f,%.2f,%d\n",tipo,voto, peso, (riga+1));
-            fflush(*file);
-            fclose(*file);
+        if(file = fopen(fileName, "r")){
+            file = fopen(fileName, "a");
+            fprintf(file, "%s,%.2f,%.2f,%d\n",tipo,voto, peso, (riga+1));
+            fflush(file);
+            fclose(file);
         }else{
             perror("Impossibile aprire il file");
         }
     }
 }
 
-void ins_materie(FILE **file, char fileName[], char input[]){
-    if ((*file = fopen(fileName, "r")) != NULL){
+void ins_materie(char fileName[], char input[]){
+    FILE *file;
+    if ((file = fopen(fileName, "r")) != NULL){
         char buffer[255];
 
         bool matDoppia = false;
-        while(fgets(buffer, sizeof(buffer), *file) != NULL){
+        while(fgets(buffer, sizeof(buffer), file) != NULL){
             if(strcasecmp(buffer, input) == 0){
                 matDoppia = true;
                 break;
@@ -91,26 +97,27 @@ void ins_materie(FILE **file, char fileName[], char input[]){
         }
         
         if(matDoppia == false){
-            *file = fopen(fileName, "a");
-            fprintf(*file, input);
-            fflush(*file);
+            file = fopen(fileName, "a");
+            fprintf(file, input);
+            fflush(file);
             printf("materia aggiunta\n");
         }else{
             printf("Materia doppia\n");
             matDoppia = false;
         }
-        fclose(*file);
+        fclose(file);
     }else{
         perror("impossibile aprire il file");
     }
 }
 
-void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]){
-    if((*file = fopen(nome,"r")) != NULL){
+void prende_nomi(char nome[], char arrey_mat[15][1024]){
+    FILE *file;
+    if((file = fopen(nome,"r")) != NULL){
         char buffer[255];
 
         int i = 0;
-        while(fgets(buffer, sizeof(buffer), *file) != NULL){
+        while(fgets(buffer, sizeof(buffer), file) != NULL){
             buffer[strlen(buffer)-1] = '\0';
             if(i < 15){
                 strcpy(arrey_mat[i], buffer);
@@ -120,19 +127,20 @@ void prende_nomi(FILE **file, char nome[], char arrey_mat[15][1024]){
                 printf("arrey riempito\n");
             }
         }
-        fclose(*file);
+        fclose(file);
     }else{
         perror("Impossibile aprire il file");
     }
 }
 
-void path(FILE **file,char nome[], char path[], char extention[],char arrey_mat[15][1024]){
-    if((*file = fopen(nome, "r")) != NULL){
+void path(char nome[], char path[], char extention[],char arrey_mat[15][1024]){
+    FILE *file;
+    if((file = fopen(nome, "r")) != NULL){
         char buffer[255];
 
         char result[1024];
         int i = 0;
-        while (fgets(buffer, sizeof(buffer), *file) != NULL){
+        while (fgets(buffer, sizeof(buffer), file) != NULL){
             
             buffer[strlen(buffer)-1] = '\0';
             snprintf(result, sizeof(result), "%s%s%s", path, buffer, extention);
@@ -147,11 +155,13 @@ void path(FILE **file,char nome[], char path[], char extention[],char arrey_mat[
                 }
             }
         }
-        fclose(*file);
+        fclose(file);
     }
 }
 
-int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line){
+int elimina_mat(char fileName[], int delete_line){
+    FILE *file;
+    FILE *temp;
 
    char tem_fileName[1024];
    char buffer[2048];
@@ -159,10 +169,10 @@ int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line){
     strcpy(tem_fileName, "temp____");
     strcat(tem_fileName, fileName);
 
-    *file = fopen(fileName, "r");
-    *temp = fopen(tem_fileName, "w");
+    file = fopen(fileName, "r");
+    temp = fopen(tem_fileName, "w");
 
-    if(*file == NULL || *temp == NULL){
+    if(file == NULL || temp == NULL){
         perror("Error opening file(s)");
         return 1;
     }
@@ -170,19 +180,19 @@ int elimina_mat(FILE **file, FILE **temp, char fileName[], int delete_line){
     bool keep_reading = true;
     int current_Line = 1;
     do{
-        fgets(buffer, 2048, *file);
+        fgets(buffer, 2048, file);
 
-        if(feof(*file)) {
+        if(feof(file)) {
             keep_reading = false;
         }else if (current_Line != delete_line){
-            fputs(buffer, *temp);
+            fputs(buffer, temp);
         }
         current_Line++;
         
     }while (keep_reading);
     
-    fclose(*file);
-    fclose(*temp);
+    fclose(file);
+    fclose(temp);
 
     remove(fileName);
     rename(tem_fileName, fileName);
@@ -197,7 +207,110 @@ int make_dir(char *folderName){
     printf("Cartella '%s' creata con successo!\n", folderName);
 }
 
-int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],char extention[], char path[]){
+int prendi_voti(StudentVote *StudentVote,char fileName[], int n_struct){
+    FILE *file;
+    
+    file = fopen(fileName, "r");
+    if (file == NULL){
+        perror("Impossibile aprire il file");
+        return 1;
+    }
+
+    int read = 0;
+    int i = 0;
+    do
+    {
+        //read = 
+        fscanf(file,
+                        "%49[^,],%f,%f,%d",
+                        StudentVote[n_struct].tipo[i],
+                        &StudentVote[n_struct].voti[i],
+                        &StudentVote[n_struct].pesi[i],
+                        &StudentVote[n_struct].linea
+                    );
+        i++;
+    } while (!feof(file));
+
+    fclose(file);
+}
+
+void modifica_valore_csv(const char *nome_file, int riga, int colonna, const char *nuovo_valore) {
+    FILE *file = fopen(nome_file, "r");  // Apre il file in modalità lettura
+    if (file == NULL) {
+        perror("Errore nell'aprire il file");
+        return;
+    }
+
+    char line[1024];
+    char temp[1024] = "\0";  // Buffer temporaneo per ogni riga
+    int riga_corrente = 1;
+
+    // Prima, leggiamo tutte le righe e salviamo il contenuto in un array temporaneo
+    while (fgets(line, sizeof(line), file)) {
+        if (riga_corrente == riga) {
+            // Se siamo nella riga da modificare
+            char campo[255];
+            int colonna_corrente = 1;
+            char *token = strtok(line, ",");
+            int posizione = 0;  // La posizione del token (campo)
+
+            // Copia la riga modificata nel buffer temporaneo
+            while (token != NULL) {
+                if (colonna_corrente == colonna) {
+                    // Sostituisci il valore nella colonna desiderata
+                    snprintf(campo, sizeof(campo), "%s", nuovo_valore);
+                    strcat(temp, campo);
+                } else {
+                    // Copia il valore originale se non è la colonna da modificare
+                    strcat(temp, token);
+                }
+
+                token = strtok(NULL, ",");
+                colonna_corrente++;
+
+                // Aggiungi la virgola se non siamo all'ultimo campo
+                if (token != NULL) {
+                    strcat(temp, ",");
+                }
+            }
+        } else {
+            // Copia la riga non modificata
+            strcat(temp, line);
+        }
+        riga_corrente++;
+    }
+
+    fclose(file);  // Chiudiamo il file dopo aver letto tutto
+
+    // Ora scriviamo il contenuto modificato nel file
+    file = fopen(nome_file, "w");  // Apre il file in modalità scrittura
+    if (file == NULL) {
+        perror("Errore nell'aprire il file per la scrittura");
+        return;
+    }
+
+    fprintf(file, "%s", temp);  // Scrive il contenuto modificato nel file
+
+    fclose(file);  // Chiudiamo il file dopo aver scritto
+}
+
+int righe_in_file(char nome_file[]){
+    FILE *file;
+    if((file = fopen(nome_file, "r")) == NULL){
+        perror("Impossibile aprire il file:");
+        return 1000000000;
+    }
+    int tot_line = 0;
+    char buffer[255];
+    while (fgets(buffer, sizeof(buffer), file) != NULL){
+        tot_line++;
+    }
+    return tot_line;
+}
+
+int elimina_voto(int DeliteLine, char file_Name[],char extention[], char path[]){
+    FILE *file, *temp;
+    
     char tem_file_Name[1024];
     char tem_fileName[1024];
     char buffer[2048];
@@ -209,105 +322,30 @@ int elimina_voto(FILE **file, FILE **temp, char DeliteLine[], char file_Name[],c
     snprintf(fileName, sizeof(fileName), "%s%s%s", path, file_Name, extention);
     snprintf(tem_fileName, sizeof(tem_fileName), "%s%s%s", path, tem_file_Name, extention);
 
-    *file = fopen(fileName, "r");
-    *temp = fopen(tem_fileName, "w");
-    
-    if (DeliteLine[0] == '\n') {
-        memmove(DeliteLine, DeliteLine + 1, strlen(DeliteLine));
-    }
+    file = fopen(fileName, "r");
+    temp = fopen(tem_fileName, "w");
 
-    if(*file == NULL || *temp == NULL){
+    if(file == NULL || temp == NULL){
         perror("Error opening file(s)");
         return 1;
     }
 
-    while(fgets(buffer, sizeof(buffer), *file) != NULL){
-        buffer[strcspn(buffer, "\n")] = '\0';
+    bool keep_reading = true;
+    int current_line = 1;
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        //buffer[strcspn(buffer, "\n")] = '\0';  // Rimuovi il newline alla fine
 
-        if (strcmp(buffer, DeliteLine) != 0){
-            fprintf(*temp, "%s\n", buffer);
+        // Scrivi la riga nel file temporaneo solo se non è la riga da eliminare
+        if (current_line != DeliteLine) {
+            fprintf(temp, "%s\n", buffer);
         }
+        
+        current_line++;
     }
     
-    fclose(*file);
-    fclose(*temp);
+    fclose(file);
+    fclose(temp);
 
     remove(fileName);
     rename(tem_fileName, fileName);
-}
-
-int prendi_voti(StudentVote StudentVote[100], FILE **file, char fileName[]){
-    *file = fopen(fileName, "r");
-    if (*file == NULL){
-        perror("Impossibile aprire il file");
-        return 1;
-    }
-
-    int read = 0;
-    int i = 0;
-    do
-    {
-        //read = 
-        fscanf(*file,
-                        "%49[^,],%f,%f,%d",
-                        StudentVote[i].tipo,
-                        &StudentVote[i].voti[i],
-                        &StudentVote[i].pesi[i],
-                        &StudentVote[i].linea
-                    );
-        i++;
-    } while (!feof(*file));
-
-    fclose(*file);
-}
-
-void modifica_valore_csv(const char *nome_file, int riga, int colonna, const char *nuovo_valore){
-    FILE *file = fopen(nome_file, "r+");  // Apre il file per lettura e scrittura
-    if (file == NULL) {
-        perror("Errore nell'aprire il file");
-        return;
-    }
-
-    char line[1024];
-    int riga_corrente = 1;
-
-    // Leggi il file riga per riga
-    while (fgets(line, sizeof(line), file)) {
-        if (riga_corrente == riga) {
-            char campo[100];
-            int colonna_corrente = 1;
-            long posizione_iniziale = ftell(file) - strlen(line); // Posizione iniziale della riga
-
-            // Elabora ogni campo della riga
-            char *token = strtok(line, ",");
-            long posizione = posizione_iniziale; // Ripristina la posizione iniziale
-            while (token != NULL) {
-                if (colonna_corrente == colonna) {
-                    fseek(file, posizione, SEEK_SET);  // Torna alla posizione giusta
-                    fprintf(file, "%s", nuovo_valore);  // Scrive il nuovo valore
-                    fflush(file);  // Assicura che i dati siano scritti nel file
-                    break;
-                }
-                posizione += strlen(token) + 1; // Aggiungi la lunghezza del campo + la virgola
-                token = strtok(NULL, ",");
-                colonna_corrente++;
-            }
-            break;
-        }
-        riga_corrente++;
-    }
-    fclose(file);  // Chiude il file
-}
-
-int righe_in_file(FILE **file, char nome_file[]){
-    if((*file = fopen(nome_file, "r")) == NULL){
-        perror("Impossibile aprire il file:");
-        return 1;
-    }
-    int tot_line = 0;
-    char buffer[255];
-    while (fgets(buffer, sizeof(buffer), *file) != NULL){
-        tot_line++;
-    }
-    return tot_line;
 }

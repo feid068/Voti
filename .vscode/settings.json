@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "stdio.h": "c",
+        "funzioni_della_media.h": "c",
+        "stdbool.h": "c",
+        "menu.h": "c",
+        "leggo_e_scrivo_file.h": "c",
+        "string.h": "c"
+    }
+}
